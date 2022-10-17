@@ -1,0 +1,28 @@
+/*global styles*/
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+body{
+    font-family: 'Ubuntu', sans-serif;
+    background-color:#FAEFFB;
+}
+#Title{
+    color: slateblue;
+    display:inline-block;
+
+}
+
+button{
+    border-radius:8px;
+    font-size: large;
+    color:#302754;
+    font-family: 'Ubuntu', sans-serif;
+
+}
+#hit{
+    background-color : #B7A48F;
+}
+
+#stay{
+    background-color: #D3AC88;
+}
+

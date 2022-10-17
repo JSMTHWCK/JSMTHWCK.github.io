@@ -1,0 +1,6 @@
+Pure random : 
+    don't show history, see if they can find a pattern
+RIG 1:
+    show history, see if they fall into the trap
+RIG 2:
+    same as RIG1, just different pattern
