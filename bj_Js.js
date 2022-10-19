@@ -10,10 +10,10 @@ let betsize = 0
 let gamenum = 0
 let dealerScore = 0
 let playerScore = 0
-let dealerhands = [[["2S","9C","2C","8D"]/*,["1D","9S"]*/,["QD","5H","6D"],["8S","7C","JC"],["10S","1S"],["3D","3S","10H","7S"],["KH","8D","6C"],["7H","7K","7D"],["KS","1D"],["7H","3C","8D"]],[]]  
+let dealerhands = [[["2S","9C","2C","8D"],["1D","9S"],["QD","5H","6D"],["8S","7C","JC"],["10S","1S"],["3D","3S","10H","7S"],["KH","8D","6C"],["7H","7S","7D"],["KS","1D"],["7H","3C","8D"]],[]]  
 //1 is 1/11, JQK are all 10s
 console.log('pass')
-let bjhands = [[["QH","2C","10C"]/*,["5S","6H","1C","10H"]*/,["5H","JS","8D"],["JD","10S","6D"],["9H","3C","4S","7D"],["10D","KH","9S"],["9C","9H","8H"],["KC","9H","5S"],["10C","9D","KH"],["10S","KS","2H"]],[]]
+let bjhands = [[["QH","2C","10C"],["5S","6H","1C","10H"],["5H","JS","8D"],["JD","10S","6D"],["9H","3C","4S","7D"],["10D","KH","9S"],["9C","9H","8H"],["KC","9H","5S"],["10C","9D","KH"],["10S","KS","2H"]],[]]
 console.log('last')
 let stays = []
 //stays is at what value did they stay (helping show confidence)
@@ -55,8 +55,8 @@ function addArray(a){
 }
 function bet(){
     betsize = prompt("choose bet size")
-    while(betsize > points){
-        alert("you can't bet that much!")
+    while(betsize > points || betsize <= 0|| Number.isInteger(parseInt(betsize)) != true){
+        alert("you can't bet that amount!")
         betsize = prompt("choose valid bet size")
     }
     points -= betsize
@@ -76,6 +76,8 @@ function payout(bet,result){
     }
 }
 function gameResult(){
+    console.log(dealerScore)
+    console.log(playerScore)
     if(dealerScore <= 21){
     if(playerScore > dealerScore){
         return "Win"
@@ -93,16 +95,13 @@ function gameResult(){
 }
 
 function loadImage(hand,index,turn){
-    console.log("entered load image")
     var image = new Image()
     if(turn == "back"){
         a = "fronts/" + cardIds["card_back"][1]
-    }
+    }    
     let a = "fronts/" + cardIds[hand[index]][1]
-    console.log(a)
     image.src = a
     image.width = 130.4
-    console.log(image.width)
     if(turn == "Dealer"){
     document.getElementById("dealercards").appendChild(image)
     }
@@ -113,21 +112,20 @@ function loadImage(hand,index,turn){
 }
 
 function run_dealer(){
-    //<<<<<<<<<<<flipping the dealers cards>>>>>>>>>>>>>
     //<<<<<<<<<<putting down the rest of the dealers cards>>>
     console.log(dealerhands[mode][gamenum].length)
     loadImage(current_dealer,1,"Dealer")
+    dealerScore = addArray(current_dealer)
+    document.getElementById("dealerTotal").innerHTML = "dealer total : " + addArray(current_dealer)
     for(let i = current_dealer.length; i < dealerhands[mode][gamenum].length ; i++){
-        //setTimeout(loadImage(current_dealer,current_dealer.length - 1,"Dealer"),1000)
         current_dealer.push(dealerhands[mode][gamenum][i]) 
         loadImage(current_dealer,current_dealer.length-1,"Dealer")
+        dealerScore = addArray(current_dealer)
         document.getElementById("dealerTotal").innerHTML = "dealer total : " + addArray(current_dealer)
         }
-    console.log(betsize)
-    console.log(gameResult())
+
     points += payout(betsize,gameResult())
-    console.log(points)
-    document.getElementById("pttotal").innerHTML = points
+    document.getElementById("pttotal").innerHTML = "points : " + points
 
 }
 //list of actual functions
@@ -136,7 +134,10 @@ function hit(){
     //resets the game
     if(document.getElementById("hit").innerHTML == "New Game"){
         //RESETS VALUES 
-        
+        if(gamenum == 9){
+            alert("game finished")
+            return NaN
+        }
         document.getElementById("hit").innerHTML = "Hit"
         document.getElementById("playercards").innerHTML = ""
         document.getElementById("dealercards").innerHTML = ""
@@ -147,18 +148,21 @@ function hit(){
 
         //changes hand
         current_hand = bjhands[mode][gamenum].slice(0,2)
-        /*
-
-        */
+        if(points == 0){
+            alert("you ran out of points")
+            return NaN
+        }
        loadImage(current_hand,0,"Player")
        loadImage(current_hand,1,"Player")
+       playerScore = addArray(current_hand)
         document.getElementById("total").innerHTML = "player total : " + addArray(current_hand)
 
         current_dealer = dealerhands[mode][gamenum].slice(0,2)
         loadImage(current_dealer,0,"Dealer")
         //changes internal stuff
-        document.getElementById("pttotal").innerHTML =  bet()
-        document.getElementById("gamenum").innerHTML = gamenum
+
+        document.getElementById("pttotal").innerHTML =  "points : " + bet()
+        document.getElementById("gamenum").innerHTML = "round number :" + gamenum
     }
     else{
         current_hand.push(bjhands[mode][gamenum][current_hand.length])
@@ -175,6 +179,11 @@ function hit(){
 
 }
 function stay(){
+    if(document.getElementById("hit").innerHTML == "New Game"){
+        hit()
+        console.log('hit hit')
+        return NaN
+    }
     run_dealer()
     stays.push(playerScore)
     document.getElementById("hit").innerHTML = "New Game"
@@ -184,16 +193,17 @@ function stay(){
 
 
 
-/*
+
 function reset(){
-    gamenum = -1
+    gamenum = 0
     points = 100
-    alert("mode was " + mode)
     alert("stays was "+ stays)
-    //mode = Math.floor(Math.random() * 2)
-    mode = 1
+    document.getElementById("playercards").innerHTML = ""
+    document.getElementById("dealercards").innerHTML = ""
+    document.getElementById("hit").innerHTML = "New Game"
+    mode = prompt("choose mode (0 or 1 (rigged))")
+    mode = parseInt(mode)
 
 }
-*/
 mode = 0
 
