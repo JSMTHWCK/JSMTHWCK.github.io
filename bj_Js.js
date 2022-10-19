@@ -10,10 +10,12 @@ let betsize = 0
 let gamenum = 0
 let dealerScore = 0
 let playerScore = 0
-let dealerhands = [[["2S","9C","2C","8D"],["1D","9S"],["QD","5H","6D"],["8S","7C","JC"],["10S","1S"],["3D","3S","10H","7S"],["KH","8D","6C"],["7H","7S","7D"],["KS","1D"],["7H","3C","8D"]],[]]  
+let dealerhands = [[["2S","9C","2C","8D"],["1D","9S"],["QD","5H","6D"],["8S","7C","JC"],["10S","1S"],["3D","3S","10H","7S"],["KH","8D","6C"],["7H","7S","7D"],["KS","1D"],["7H","3C","8D"]],
+                    [["9S","5H","KH"],["4D","7C","KD"],["QH","5S","10D"],["9H","5D"],["JS","8D","6H"],["9D","KS","1H"],["7H","7S","7D"],["KS","1D"],["JD","6H","4S"]]]  
 //1 is 1/11, JQK are all 10s
 console.log('pass')
-let bjhands = [[["QH","2C","10C"],["5S","6H","1C","10H"],["5H","JS","8D"],["JD","10S","6D"],["9H","3C","4S","7D"],["10D","KH","9S"],["9C","9H","8H"],["KC","9H","5S"],["10C","9D","KH"],["10S","KS","2H"]],[]]
+let bjhands = [[["QH","2C","10C"],["5S","6H","1C","10H"],["5H","JS","8D"],["JD","10S","6D"],["9H","3C","4S","7D"],["10D","KH","9S"],["9C","9H","8H"],["KC","9H","5S"],["10C","9D","KH"],["10S","KS","2H"]],
+                [["KS","6H","4D","7S"],["1H","9H","9D","8S"],["10C","10H","10D"],["10S","1C"],["6D","3D","3S","QS"],["10S","4D","6H","1S"],["9D","8H","6D"],["7D","JC","5C"],["QS","9S","7S"],["AS","8D","4C","6D","7S"]]]
 console.log('last')
 let stays = []
 //stays is at what value did they stay (helping show confidence)
@@ -134,7 +136,7 @@ function hit(){
     //resets the game
     if(document.getElementById("hit").innerHTML == "New Game"){
         //RESETS VALUES 
-        if(gamenum == 9){
+        if(gamenum == 10){
             alert("game finished")
             return NaN
         }
@@ -162,7 +164,7 @@ function hit(){
         //changes internal stuff
 
         document.getElementById("pttotal").innerHTML =  "points : " + bet()
-        document.getElementById("gamenum").innerHTML = "round number :" + gamenum
+        document.getElementById("gamenum").innerHTML = "round number :" + (gamenum + 1)
     }
     else{
         current_hand.push(bjhands[mode][gamenum][current_hand.length])
