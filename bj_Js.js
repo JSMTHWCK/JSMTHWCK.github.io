@@ -38,23 +38,20 @@ let cardIds = {
 //list of helper functions
 
 function addArray(a){
+    let eleven_score = false
     let sum = 0
     for(let i = 0; i < a.length; i++){
-        if(a.length<= 2){
-            if(cardIds[a[i]][0] == 1){
-                a += 10
-            }
-        }
-        if(["J","Q","K"].includes(cardIds[a[i]][0])){
+        if(i <= 2 && cardIds[a[i]][0] == 1){
+            eleven_score = true
             sum += 10
         }
-        else{
         sum += cardIds[a[i]][0]
-        }
+    }
+        if(eleven_score == true && sum >= 22){
+            sum -= 10
     }
     return sum
 }
-
 function bet(){
     betsize = prompt("choose bet size")
     while(betsize > points){
@@ -66,6 +63,7 @@ function bet(){
     
 }
 function payout(bet,result){
+    bet = parseInt(bet)
     if(result == "Win"){
         return bet*2
     }
@@ -79,6 +77,7 @@ function payout(bet,result){
 function gameResult(){
     playerScore = document.getElementById("total").innerHTML
     dealerScore = document.getElementById("dealerTotal").innerHTML
+    if(dealerScore <= 21){
     if(playerScore > dealerScore){
         return "Win"
     }
@@ -89,8 +88,13 @@ function gameResult(){
         return "Lose"
     }
 }
-function loadImage(hand,index,turn){
+    else{
+        return "Win"
+    }
+}
 
+function loadImage(hand,index,turn){
+    console.log("entered load image")
     var image = new Image()
     if(turn == "back"){
         a = "fronts/" + cardIds["card_back"][1]
@@ -98,7 +102,7 @@ function loadImage(hand,index,turn){
     let a = "fronts/" + cardIds[hand[index]][1]
     console.log(a)
     image.src = a
-    image.width = image.width * 0.4
+
     if(turn == "Dealer"){
     document.getElementById("dealercards").appendChild(image)
     }
@@ -108,8 +112,24 @@ function loadImage(hand,index,turn){
     }
 }
 
+function run_dealer(){
+    //<<<<<<<<<<<flipping the dealers cards>>>>>>>>>>>>>
+    //<<<<<<<<<<putting down the rest of the dealers cards>>>
+    console.log(dealerhands[mode][gamenum].length)
+    loadImage(current_dealer,1,"Dealer")
+    for(let i = current_dealer.length; i < dealerhands[mode][gamenum].length ; i++){
+        //setTimeout(loadImage(current_dealer,current_dealer.length - 1,"Dealer"),1000)
+        current_dealer.push(dealerhands[mode][gamenum][i]) 
+        loadImage(current_dealer,current_dealer.length-1,"Dealer")
+        document.getElementById("dealerTotal").innerHTML = addArray(current_dealer)
+        }
+    console.log(betsize)
+    console.log(gameResult())
+    points += payout(betsize,gameResult())
+    console.log(points)
+    document.getElementById("pttotal").innerHTML = points
 
-
+}
 //list of actual functions
 function hit(){
 
@@ -118,16 +138,18 @@ function hit(){
         //RESETS VALUES 
         
         document.getElementById("hit").innerHTML = "Hit"
-        document.getElementById("playercards").textContent = ""
-        document.getElementById("dealercards").textContent = ""
-        document.getElementById("total").textContent = 0
-        document.getElementById('dealerTotal').textContent = 0
+        document.getElementById("playercards").innerHTML = ""
+        document.getElementById("dealercards").innerHTML = ""
+        document.getElementById("total").innerHTML = 0
+        document.getElementById('dealerTotal').innerHTML = 0
 
         //changes hand
         current_hand = bjhands[mode][gamenum].slice(0,2)
         /*
 
         */
+       loadImage(current_hand,0,"Player")
+       loadImage(current_hand,1,"Player")
         document.getElementById("total").innerHTML = addArray(current_hand)
 
         current_dealer = dealerhands[mode][gamenum].slice(0,2)
@@ -135,18 +157,13 @@ function hit(){
         //changes internal stuff
         document.getElementById("pttotal").innerHTML =  bet()
         document.getElementById("gamenum").innerHTML = gamenum
-
-        console.log('what on earth')
-    
-        loadImage(current_hand,0,"player")
-        loadImage(current_hand,1,"player")
     }
     else{
         current_hand.push(bjhands[mode][gamenum][current_hand.length])
-        loadImage(current_hand,current_hand.length - 1,"player")
+        loadImage(current_hand,current_hand.length-1,"Player")
         console.log(current_hand)
         document.getElementById("total").innerHTML = addArray(current_hand)
-        if(addArray(current_hand) > 22){
+        if(addArray(current_hand) >= 22){
             //run_dealer()
             document.getElementById("hit").innerHTML = "New Game"
             gamenum += 1
@@ -164,23 +181,7 @@ function stay(){
 }
 
 
-function run_dealer(){
-    //<<<<<<<<<<<flipping the dealers cards>>>>>>>>>>>>>
-    //<<<<<<<<<<putting down the rest of the dealers cards>>>
-    console.log(dealerhands[mode][gamenum].length)
-    for(let i = current_dealer.length; i < dealerhands[mode][gamenum].length + 1 ; i++){
 
-        //can't delete
-        setTimeout(loadImage(current_dealer,current_dealer.length - 1,"Dealer"),1000)
-        document.getElementById("dealerTotal").innerHTML = addArray(current_dealer)
-        console.log(dealerhands[mode][gamenum][i])
-        current_dealer.push(dealerhands[mode][gamenum][i]) 
-
-         }
-
-    points += payout(betsize,gameResult())
-
-}
 /*
 function reset(){
     gamenum = -1
