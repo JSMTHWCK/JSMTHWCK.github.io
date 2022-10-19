@@ -5,6 +5,7 @@
 
 let current_hand = []
 let current_dealer = []
+let bet_size = []
 let points = 100
 let betsize = 0
 let gamenum = 0
@@ -61,6 +62,7 @@ function bet(){
         alert("you can't bet that amount!")
         betsize = prompt("choose valid bet size")
     }
+    bet_size.push(betsize)
     points -= betsize
     return points
     
@@ -199,11 +201,14 @@ function stay(){
 function reset(){
     gamenum = 0
     points = 100
-    alert("stays was "+ stays)
+    alert("mode was " + mode + "(1 is rigged)")
+    alert("bet sizes were " + bet_size)
+    alert("stays were " + stays)
     document.getElementById("playercards").innerHTML = ""
     document.getElementById("dealercards").innerHTML = ""
     document.getElementById("hit").innerHTML = "New Game"
     mode = prompt("choose mode (0 or 1 (rigged))")
+    stays = []
     mode = parseInt(mode)
 
 }
