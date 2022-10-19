@@ -8,7 +8,8 @@ let current_dealer = []
 let points = 100
 let betsize = 0
 let gamenum = 0
-
+let dealerScore = 0
+let playerScore = 0
 let dealerhands = [[["2S","9C","2C","8D"]/*,["1D","9S"]*/,["QD","5H","6D"],["8S","7C","JC"],["10S","1S"],["3D","3S","10H","7S"],["KH","8D","6C"],["7H","7K","7D"],["KS","1D"],["7H","3C","8D"]],[]]  
 //1 is 1/11, JQK are all 10s
 console.log('pass')
@@ -75,8 +76,6 @@ function payout(bet,result){
     }
 }
 function gameResult(){
-    playerScore = document.getElementById("total").innerHTML
-    dealerScore = document.getElementById("dealerTotal").innerHTML
     if(dealerScore <= 21){
     if(playerScore > dealerScore){
         return "Win"
@@ -102,7 +101,8 @@ function loadImage(hand,index,turn){
     let a = "fronts/" + cardIds[hand[index]][1]
     console.log(a)
     image.src = a
-
+    image.width = 130.4
+    console.log(image.width)
     if(turn == "Dealer"){
     document.getElementById("dealercards").appendChild(image)
     }
@@ -121,7 +121,7 @@ function run_dealer(){
         //setTimeout(loadImage(current_dealer,current_dealer.length - 1,"Dealer"),1000)
         current_dealer.push(dealerhands[mode][gamenum][i]) 
         loadImage(current_dealer,current_dealer.length-1,"Dealer")
-        document.getElementById("dealerTotal").innerHTML = addArray(current_dealer)
+        document.getElementById("dealerTotal").innerHTML = "dealer total : " + addArray(current_dealer)
         }
     console.log(betsize)
     console.log(gameResult())
@@ -140,8 +140,10 @@ function hit(){
         document.getElementById("hit").innerHTML = "Hit"
         document.getElementById("playercards").innerHTML = ""
         document.getElementById("dealercards").innerHTML = ""
-        document.getElementById("total").innerHTML = 0
-        document.getElementById('dealerTotal').innerHTML = 0
+        document.getElementById("total").innerHTML = "player total : 0"
+        playerScore = 0
+        document.getElementById('dealerTotal').innerHTML = "dealer total : 0"
+        dealerScore = 0
 
         //changes hand
         current_hand = bjhands[mode][gamenum].slice(0,2)
@@ -150,7 +152,7 @@ function hit(){
         */
        loadImage(current_hand,0,"Player")
        loadImage(current_hand,1,"Player")
-        document.getElementById("total").innerHTML = addArray(current_hand)
+        document.getElementById("total").innerHTML = "player total : " + addArray(current_hand)
 
         current_dealer = dealerhands[mode][gamenum].slice(0,2)
         loadImage(current_dealer,0,"Dealer")
@@ -162,19 +164,19 @@ function hit(){
         current_hand.push(bjhands[mode][gamenum][current_hand.length])
         loadImage(current_hand,current_hand.length-1,"Player")
         console.log(current_hand)
-        document.getElementById("total").innerHTML = addArray(current_hand)
+        document.getElementById("total").innerHTML = "player total : " + addArray(current_hand)
         if(addArray(current_hand) >= 22){
             //run_dealer()
             document.getElementById("hit").innerHTML = "New Game"
             gamenum += 1
-            stays.push(document.getElementById("total").innerHTML)
+            stays.push(playerScore)
         }
     }
 
 }
 function stay(){
     run_dealer()
-    stays.push(document.getElementById("total").innerHTML)
+    stays.push(playerScore)
     document.getElementById("hit").innerHTML = "New Game"
     gamenum += 1
     console.log(gamenum)
