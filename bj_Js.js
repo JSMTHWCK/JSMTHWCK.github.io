@@ -201,9 +201,8 @@ function stay(){
 function reset(){
     gamenum = 0
     points = 100
-    alert("mode was " + mode + "(1 is rigged)")
-    alert("bet sizes were " + bet_size)
-    alert("stays were " + stays)
+    alert("mode was " + mode + "(1 is rigged)" + "\n")
+    alert("bet sizes were " + bet_size + "\n" + "stays were " + stays)
     document.getElementById("playercards").innerHTML = ""
     document.getElementById("dealercards").innerHTML = ""
     document.getElementById("hit").innerHTML = "New Game"
